@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { useGetTodoQuery,useGetTodosQuery  } from "./store/apis/todosApi"
+import { useForm } from "./store/slices/todos/useForm";
+
+
 
 export const TodoApp = () => {
 
   const [todoId, setTodoId] = useState(1)
+  const{onInputChange,formState} =useForm({todoId:''})
   const {data: todo,isLoading}=  useGetTodoQuery(todoId)
 // const {data: todos =[],isLoading}=  useGetTodosQuery()
-const{ id,title} = todo
+// const{ id,title} = todo
 
 const previousTodo= ( ) =>{
   if (todoId ===1) return 
@@ -17,7 +21,16 @@ const nextTodo= ( ) =>{
   setTodoId( todoId+1);
 }
 
-console.log(id,title,isLoading);
+const searchTodo= ( ) =>{
+
+  const id= parseInt(formState.todoId,10)
+if(!isNaN(id)){
+  setTodoId( id);
+  
+}
+}
+
+// console.log(id,title,isLoading);
 
   return (
   
@@ -28,8 +41,8 @@ console.log(id,title,isLoading);
 <hr />
 <h4> Loading</h4>
   <h4>{isLoading? 'true':'false'}</h4>  
-  <pre>{ JSON.stringify(id +" "+ title )}</pre>
-   {/* <pre>{ JSON.stringify(todo )}</pre>  */}
+  {/* <pre>{ JSON.stringify(id +" "+ title )}</pre> */}
+   <pre>{ JSON.stringify(todo )}</pre> 
 
 
   <button onClick={previousTodo}>
@@ -39,6 +52,20 @@ console.log(id,title,isLoading);
   <button onClick={nextTodo}>
     Next TODOO
     </button>  
+
+    <input 
+    type="text"
+    name="todoId"
+    placeholder="escriba el número del TODO"
+    onChange={onInputChange}
+    value={formState.todoId}
+    />
+
+    <button
+    onClick={() =>searchTodo()}
+    >
+      Buscar TODO por número
+    </button>
 
           {/* <ul>
           {todos.map( todo =>(
